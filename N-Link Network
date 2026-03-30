@@ -1,0 +1,97 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>N-Link Network - Smart Networking Store</title><style>
+body { margin:0; font-family: Arial; background:#f5f5f5; }
+header { background:#131921; color:white; padding:10px; display:flex; justify-content:space-between; align-items:center; }
+.logo { font-size:22px; font-weight:bold; }
+.search input { padding:8px; width:300px; }
+.cart { cursor:pointer; }
+
+.products { display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:15px; padding:20px; }
+.card { background:white; padding:10px; border-radius:10px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
+.card img { width:100%; height:150px; object-fit:cover; }
+.btn { background:#ff9900; border:none; padding:10px; width:100%; cursor:pointer; margin-top:5px; }
+
+#cartBox { position:fixed; right:0; top:0; width:300px; height:100%; background:white; box-shadow:-2px 0 5px rgba(0,0,0,0.2); padding:15px; display:none; overflow:auto; }
+
+footer { background:#131921; color:white; text-align:center; padding:15px; }
+</style></head><body><header>
+<div class="logo">N-Link Network</div>
+<div class="search"><input type="text" id="search" placeholder="Search networking products..."></div>
+<div class="cart" onclick="toggleCart()">🛒 Cart (<span id="count">0</span>)</div>
+</header><div class="products" id="productList"></div><div id="cartBox">
+<h3>Your Cart</h3>
+<div id="cartItems"></div>
+<h4>Total: ₹<span id="total">0</span></h4>
+<button class="btn" onclick="checkout()">Checkout (WhatsApp)</button>
+</div><footer>
+© 2026 N-Link Network | Networking Solutions & Installation Services
+</footer><script>
+let products = [
+ {name:"Router", price:2500, img:"https://via.placeholder.com/200"},
+ {name:"Firewall Device", price:15000, img:"https://via.placeholder.com/200"},
+ {name:"Network Switch", price:4000, img:"https://via.placeholder.com/200"},
+ {name:"CCTV Camera", price:2000, img:"https://via.placeholder.com/200"},
+ {name:"Fiber ONU", price:1800, img:"https://via.placeholder.com/200"},
+ {name:"Access Point", price:3500, img:"https://via.placeholder.com/200"}
+];
+
+let cart = [];
+
+function displayProducts(list) {
+ let html = "";
+ list.forEach((p,i)=>{
+  html += `<div class='card'>
+    <img src='${p.img}'>
+    <h4>${p.name}</h4>
+    <p>₹${p.price}</p>
+    <button class='btn' onclick='addToCart(${i})'>Add to Cart</button>
+  </div>`;
+ });
+ document.getElementById("productList").innerHTML = html;
+}
+
+displayProducts(products);
+
+function addToCart(i){
+ cart.push(products[i]);
+ updateCart();
+}
+
+function updateCart(){
+ let html="";
+ let total=0;
+ cart.forEach(p=>{
+  html += `<p>${p.name} - ₹${p.price}</p>`;
+  total += p.price;
+ });
+ document.getElementById("cartItems").innerHTML = html;
+ document.getElementById("total").innerText = total;
+ document.getElementById("count").innerText = cart.length;
+}
+
+function toggleCart(){
+ let box = document.getElementById("cartBox");
+ box.style.display = box.style.display === "block" ? "none" : "block";
+}
+
+function checkout(){
+ let text = "Order Details:%0A";
+ cart.forEach(p=>{
+  text += `${p.name} - ₹${p.price}%0A`;
+ });
+ window.open(`https://wa.me/917030903594?text=${text}`);
+}
+
+// Search
+
+document.getElementById("search").addEventListener("input", function(){
+ let val = this.value.toLowerCase();
+ let filtered = products.filter(p=>p.name.toLowerCase().includes(val));
+ displayProducts(filtered);
+});
+
+</script></body>
+</html>
